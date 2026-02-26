@@ -3,78 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hoist Material Log</title>
+    <title>Hoist Material Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 10px; margin: 0; }
-        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #1a73e8; margin-top: 0; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
-        canvas { border: 1px solid #000; background: #fff; width: 100%; height: 150px; border-radius: 5px; margin-top: 5px; touch-action: none; }
-        .btn-submit { background: #28a745; color: white; padding: 15px; border: none; width: 100%; border-radius: 5px; font-size: 18px; margin-top: 20px; font-weight: bold; }
-        .btn-clear { background: #6c757d; color: white; padding: 5px 10px; border: none; border-radius: 3px; font-size: 12px; margin-top: 5px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7f9; margin: 0; padding: 15px; }
+        .container { max-width: 500px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: auto; }
+        h2 { text-align: center; color: #1a73e8; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 15px; color: #333; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .sig-container { border: 2px solid #333; background: #fafafa; width: 100%; height: 120px; border-radius: 8px; margin-top: 5px; position: relative; }
+        canvas { width: 100%; height: 100%; touch-action: none; }
+        .clear-btn { background: #6c757d; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 5px; float: right; }
+        .submit-btn { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; margin-top: 30px; cursor: pointer; transition: 0.3s; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Hoist Log Entry</h2>
-    <form id="hoistForm">
-        <label>Vendor Name:</label>
+<div class="container">
+    <h2>Hoist Sifting Log</h2>
+    <form id="logForm">
+        <label>Vendor/Company Name:</label>
         <select id="vendor" required>
-            <option value="">--Select Vendor--</option>
-            <option>B&B</option><option>BPS</option>
-            <option>SME</option><option>Navi electric</option>
-            <option>vdb</option>
-            </select>
+            <option value="">-- Select Company --</option>
+            <option value="BPS">BPS</option>
+            <option value="B&B">B&B</option>
+            <option value="SME">SME</option>
+            <option value="Ramsons">Ramsons</option>
+            <option value="VDB">VDB</option>
+            <option value="Navi Infra">Navi Infra</option>
+            <option value="TSI">TSI</option>
+            <option value="SRC">SRC</option>
+        </select>
 
         <label>Material Name:</label>
         <input type="text" id="material" placeholder="e.g. Cement, Tiles" required>
 
-        <label>Quantity:</label>
-        <input type="text" id="quantity" placeholder="Quantity" required>
+        <label>Material Quantity:</label>
+        <input type="text" id="quantity" placeholder="e.g. 50 Bags" required>
 
-        <label>Passenger Name:</label>
-        <input type="text" id="passenger" placeholder="Passenger Name" required>
+        <label>Passenger Quantity:</label>
+        <input type="number" id="passengerQty" placeholder="Kitne log hain?" required>
+
+        <label>Time Taken (Durations):</label>
+        <input type="text" id="timeTaken" placeholder="e.g. 10min, 20min or 1hour" required>
 
         <label>Vendor Signature:</label>
-        <canvas id="vSign"></canvas>
-        <button type="button" class="btn-clear" onclick="sig1.clear()">Clear</button>
+        <div class="sig-container">
+            <canvas id="vSign"></canvas>
+        </div>
+        <button type="button" class="clear-btn" onclick="vPad.clear()">Clear</button>
+        <div style="clear: both;"></div>
 
-        <label>Operator (Your) Signature:</label>
-        <canvas id="mSign"></canvas>
-        <button type="button" class="btn-clear" onclick="sig2.clear()">Clear</button>
+        <label>Operator Signature:</label>
+        <div class="sig-container">
+            <canvas id="oSign"></canvas>
+        </div>
+        <button type="button" class="clear-btn" onclick="oPad.clear()">Clear</button>
+        <div style="clear: both;"></div>
 
-        <button type="submit" class="btn-submit" id="subBtn">Submit & Send Email</button>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit & Send Email</button>
     </form>
 </div>
 
 <script>
-    const sig1 = new SignaturePad(document.getElementById('vSign'));
-    const sig2 = new SignaturePad(document.getElementById('mSign'));
-    const SCRIPT_URL = 'PASTE_YOUR_URL_HERE'; // Https://script.google.com/macros/s/AKfycbyTfB8ys1pdsj4-AGhdcNzLNgQsy0wplf52ve9RFNBYzPUZ3Qb0MP077pDykyFCxy5mhw/exec
+    const vPad = new SignaturePad(document.getElementById('vSign'));
+    const oPad = new SignaturePad(document.getElementById('oSign'));
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTfB8ys1pdsj4-AGhdcNzLNgQsy0wplf52ve9RFNBYzPUZ3Qb0MP077pDykyFCxy5mhw/exec';
 
-    document.getElementById('hoistForm').onsubmit = async (e) => {
+    document.getElementById('logForm').onsubmit = async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('subBtn');
-        btn.disabled = true; btn.innerText = "Sending...";
+        if (vPad.isEmpty() || oPad.isEmpty()) { alert("Dono signatures zaroori hain!"); return; }
 
-        const data = {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true; btn.innerText = "Saving...";
+
+        const formData = {
             vendor: document.getElementById('vendor').value,
             material: document.getElementById('material').value,
             quantity: document.getElementById('quantity').value,
-            passenger: document.getElementById('passenger').value,
-            vendorSign: sig1.toDataURL(),
-            mySign: sig2.toDataURL()
+            passenger: document.getElementById('passengerQty').value, // Ab ye quantity bhejega
+            time: document.getElementById('timeTaken').value, // Naya time field
+            vendorSign: vPad.toDataURL(),
+            mySign: oPad.toDataURL()
         };
 
         try {
-            await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(formData) });
             alert("Entry Saved Successfully!");
             location.reload();
         } catch (error) {
-            alert("Success! Check your Google Sheet.");
+            alert("Success! Entry sheet mein bhej di gayi hai.");
             location.reload();
         }
     };
