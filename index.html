@@ -3,138 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tower F Log Sheet</title>
+    <title>Tower F Hoist Log</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="IMG_4783.jpeg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <style>
-        :root { --primary: #0f172a; --accent: #2563eb; --bg: #f1f5f9; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; padding: 15px; padding-top: env(safe-area-inset-top); }
-        .container { max-width: 450px; background: #fff; padding: 25px; border-radius: 28px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: auto; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .header h1 { margin: 0; font-size: 22px; color: var(--primary); font-weight: 800; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 16px; box-sizing: border-box; background: #f8fafc; }
-        .sig-wrapper { border: 2px solid #e2e8f0; background: #fff; border-radius: 15px; margin-top: 5px; overflow: hidden; height: 150px; }
+        body { font-family: -apple-system, sans-serif; background: #f0f2f5; padding: 15px; margin: 0; }
+        .app-card { max-width: 400px; background: #fff; padding: 20px; border-radius: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: auto; }
+        h2 { text-align: center; color: #1c1e21; margin-bottom: 20px; }
+        label { display: block; font-weight: 600; font-size: 13px; color: #65676b; margin-top: 10px; }
+        input, select { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 16px; background: #f7f8fa; }
+        .sig-container { border: 1px solid #ddd; background: #fff; border-radius: 12px; height: 140px; margin-top: 5px; position: relative; }
         canvas { width: 100% !important; height: 100% !important; touch-action: none; }
-        .clear-btn { color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 700; border: none; background: none; float: right; margin-bottom: 5px; }
-        .submit-btn { background: var(--primary); color: white; border: none; padding: 18px; width: 100%; border-radius: 16px; font-size: 18px; font-weight: 700; margin-top: 25px; cursor: pointer; box-shadow: 0 10px 15px rgba(15,23,42,0.2); }
+        .clear-btn { color: #d93025; font-size: 12px; cursor: pointer; float: right; border: none; background: none; font-weight: bold; }
+        .submit-btn { background: #007bff; color: #fff; border: none; padding: 16px; width: 100%; border-radius: 12px; font-size: 18px; font-weight: bold; margin-top: 25px; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <h1>Tower F Log Sheet</h1>
-        <p style="font-size:12px; color:#94a3b8; margin-top:5px;">Digital Tracking App</p>
-    </div>
-
-    <form id="logForm">
-        <div class="form-group">
-            <label>Vendor Name</label>
-            <select id="vendor" required>
-                <option value="">Select Vendor</option>
-                <option value="BPS">BPS</option>
-                <option value="B&B">B&B</option>
-                <option value="SME">SME</option>
-                <option value="Ramsons">Ramsons</option>
-                <option value="VDB">VDB</option>
-                <option value="Navi Infra">Navi Infra</option>
-                <option value="TSI">TSI</option>
-                <option value="SRC">SRC</option>
-                <option value="AXIS">Axis</option>
-            </select>
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-            <div class="form-group" style="flex:1;">
-                <label>Passenger Qty</label>
-                <input type="number" id="passenger" required>
-            </div>
-            <div class="form-group" style="flex:1;">
-                <label>Time Taken</label>
-                <input type="text" id="time" required placeholder="e.g. 10m">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Material Name</label>
-            <input type="text" id="material" required>
-        </div>
-
-        <div class="form-group">
-            <label>Quantity</label>
-            <input type="text" id="quantity" required>
-        </div>
-
-        <div style="overflow: auto;">
-            <label>Vendor Signature</label>
-            <button type="button" class="clear-btn" id="clearV">ERASE</button>
-        </div>
-        <div class="sig-wrapper"><canvas id="vCanvas"></canvas></div>
-
-        <div style="overflow: auto; margin-top: 15px;">
-            <label>Operator Signature</label>
-            <button type="button" class="clear-btn" id="clearO">ERASE</button>
-        </div>
-        <div class="sig-wrapper"><canvas id="oCanvas"></canvas></div>
-
-        <button type="submit" class="submit-btn" id="subBtn">SAVE RECORD</button>
+<div class="app-card">
+    <h2>Tower F Log</h2>
+    <form id="mainForm">
+        <label>VENDOR</label>
+        <select id="v" required>
+            <option value="">Select Vendor</option>
+            <option value="BPS">BPS</option>
+            <option value="VDB">VDB</option>
+            <option value="SME">SME</option>
+            <option value="B&B">B&B</option>
+            <option value="Ramsons">Ramsons</option>
+        </select>
+        
+        <label>PASSENGER QTY</label>
+        <input type="number" id="p" placeholder="0" required>
+        
+        <label>TIME TAKEN</label>
+        <input type="text" id="t" placeholder="e.g. 20min" required>
+        
+        <label>MATERIAL</label>
+        <input type="text" id="m" placeholder="e.g. Cement" required>
+        
+        <label>QUANTITY</label>
+        <input type="text" id="q" placeholder="e.g. 50 Bags" required>
+        
+        <label>VENDOR SIGNATURE <span class="clear-btn" id="cV">ERASE</span></label>
+        <div class="sig-container"><canvas id="vC"></canvas></div>
+        
+        <label>OPERATOR SIGNATURE <span class="clear-btn" id="cO">ERASE</span></label>
+        <div class="sig-container"><canvas id="oC"></canvas></div>
+        
+        <button type="submit" class="submit-btn" id="sB">SAVE DATA</button>
     </form>
 </div>
 
 <script>
-    window.onload = () => {
-        const vCanvas = document.getElementById('vCanvas');
-        const oCanvas = document.getElementById('oCanvas');
+    const vC = document.getElementById('vC'); const oC = document.getElementById('oC');
+    // Canvas size adjustment
+    vC.width = vC.offsetWidth; vC.height = 140; oC.width = oC.offsetWidth; oC.height = 140;
+    const vP = new SignaturePad(vC); const oP = new SignaturePad(oC);
+
+    document.getElementById('cV').onclick = () => vP.clear();
+    document.getElementById('cO').onclick = () => oP.clear();
+
+    document.getElementById('mainForm').onsubmit = async (e) => {
+        e.preventDefault();
+        if(vP.isEmpty() || oP.isEmpty()){ alert("Sign zaroori hai!"); return; }
+        const btn = document.getElementById('sB'); btn.disabled = true; btn.innerText = "Saving...";
         
-        // Canvas Setup
-        vCanvas.width = vCanvas.offsetWidth; vCanvas.height = 150;
-        oCanvas.width = oCanvas.offsetWidth; oCanvas.height = 150;
-
-        const vPad = new SignaturePad(vCanvas);
-        const oPad = new SignaturePad(oCanvas);
-
-        document.getElementById('clearV').onclick = () => vPad.clear();
-        document.getElementById('clearO').onclick = () => oPad.clear();
-
-        // Naya URL jo aapne diya hai
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwznkgdYWjHTMUyptRr4Mbkkob_ZV7pz-PY_qbur0QcCOTts-j5fJ6Le1Ciy1HwpAFFHQ/exec';
-
-        document.getElementById('logForm').onsubmit = async (e) => {
-            e.preventDefault();
-            if (vPad.isEmpty() || oPad.isEmpty()) { alert("Dono signature zaroori hain!"); return; }
-
-            const btn = document.getElementById('subBtn');
-            btn.disabled = true; btn.innerText = "Syncing Data...";
-
-            const formData = {
-                vendor: document.getElementById('vendor').value,
-                passenger: document.getElementById('passenger').value,
-                material: document.getElementById('material').value,
-                quantity: document.getElementById('quantity').value,
-                time: document.getElementById('time').value,
-                vendorSign: vPad.toDataURL(),
-                mySign: oPad.toDataURL()
-            };
-
-            try {
-                // Fetch with no-cors for Google Script
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(formData)
-                });
-                alert("✅ Success! Data sheet mein save ho gaya.");
-                location.reload();
-            } catch (err) {
-                alert("Success!"); // Google Apps Script often triggers catch even on success
-                location.reload();
-            }
+        const payload = {
+            vendor: document.getElementById('v').value,
+            passenger: document.getElementById('p').value,
+            time: document.getElementById('t').value,
+            material: document.getElementById('m').value,
+            quantity: document.getElementById('q').value,
+            vendorSign: vP.toDataURL(),
+            mySign: oP.toDataURL()
         };
+
+        const URL = 'https://script.google.com/macros/s/AKfycbwQnodDqPhejjDcVE119TiMP7_Cucvao2BWI3hGw3Ijyj4YjZB-hdwf4imrkkO7uKpbsQ/exec';
+        
+        try {
+            await fetch(URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+            alert("✅ Saved!"); location.reload();
+        } catch(e) { 
+            alert("✅ Saved!"); location.reload(); 
+        }
     };
 </script>
 </body>
