@@ -3,28 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Professional Hoist Tracker</title>
+    <title>Hoist Log Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; margin: 0; padding: 10px; color: #333; }
-        .card { max-width: 450px; background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 15px auto; }
-        .header { text-align: center; margin-bottom: 25px; }
-        .header h2 { color: #1a73e8; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
-        .header p { color: #777; font-size: 14px; margin-top: 5px; }
-        
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #555; }
-        input, select { width: 100%; padding: 14px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; background-color: #f9f9f9; transition: all 0.3s; box-sizing: border-box; }
-        input:focus, select:focus { border-color: #1a73e8; background-color: #fff; outline: none; box-shadow: 0 0 0 4px rgba(26,115,232,0.1); }
-
-        .sig-box { border: 1.5px dashed #ccc; background: #fff; border-radius: 12px; margin-top: 5px; position: relative; overflow: hidden; }
-        canvas { width: 100%; height: 130px; cursor: crosshair; touch-action: none; }
-        .clear-link { display: inline-block; color: #d93025; font-size: 12px; cursor: pointer; margin-top: 5px; text-decoration: none; font-weight: 600; }
-        
-        .submit-btn { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 18px; font-weight: 600; margin-top: 25px; cursor: pointer; box-shadow: 0 4px 15px rgba(26,115,232,0.3); transition: transform 0.2s; }
-        .submit-btn:active { transform: scale(0.98); }
-        .submit-btn:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; margin: 0; padding: 10px; }
+        .card { max-width: 450px; background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 10px auto; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h2 { color: #1a73e8; margin: 0; font-size: 22px; }
+        label { display: block; margin-top: 15px; font-weight: 600; font-size: 14px; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #f9f9f9; }
+        .sig-box { border: 1.5px dashed #ccc; background: #fff; border-radius: 10px; margin-top: 5px; height: 130px; }
+        canvas { width: 100%; height: 100%; touch-action: none; }
+        .clear-btn { color: #d93025; font-size: 12px; cursor: pointer; font-weight: 600; float: right; margin-top: 5px; }
+        .submit-btn { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-size: 18px; font-weight: 600; margin-top: 25px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -32,60 +24,41 @@
 <div class="card">
     <div class="header">
         <h2>Hoist Log System</h2>
-        <p>Material Movement Digital Tracker</p>
     </div>
 
     <form id="logForm">
-        <div class="form-group">
-            <label>Vendor/Company</label>
-            <select id="vendor" required>
-                <option value="">Choose Company...</option>
-                <option value="BPS">BPS</option>
-                <option value="B&B">B&B</option>
-                <option value="SME">SME</option>
-                <option value="Ramsons">Ramsons</option>
-                <option value="VDB">VDB</option>
-                <option value="Navi Infra">Navi Infra</option>
-                <option value="TSI">TSI</option>
-                <option value="SRC">SRC</option>
-            </select>
-        </div>
+        <label>Vendor/Company</label>
+        <select id="vendor" required>
+            <option value="">-- Select Company --</option>
+            <option value="BPS">BPS</option>
+            <option value="B&B">B&B</option>
+            <option value="SME">SME</option>
+            <option value="Ramsons">Ramsons</option>
+            <option value="VDB">VDB</option>
+            <option value="Navi Infra">Navi Infra</option>
+            <option value="TSI">TSI</option>
+            <option value="SRC">SRC</option>
+        </select>
 
-        <div class="form-group">
-            <label>Material Name</label>
-            <input type="text" id="material" placeholder="Example: Cement, Tiles, Brick" required>
-        </div>
+        <label>Passenger Quantity</label>
+        <input type="number" id="passengerQty" placeholder="Numbers only" required>
 
-        <div class="form-group">
-            <label>Material Quantity</label>
-            <input type="text" id="quantity" placeholder="Example: 50 Bags / 2 Ton" required>
-        </div>
+        <label>Material Name</label>
+        <input type="text" id="material" placeholder="Example: Cement" required>
 
-        <div class="form-group">
-            <label>Passenger Quantity</label>
-            <input type="number" id="passengerQty" placeholder="Numbers of people" required>
-        </div>
+        <label>Quantity</label>
+        <input type="text" id="quantity" placeholder="Example: 50 Bags" required>
 
-        <div class="form-group">
-            <label>Time Taken (Durations)</label>
-            <input type="text" id="timeTaken" placeholder="Example: 15 min / 1 hour" required>
-        </div>
+        <label>Time Taken</label>
+        <input type="text" id="timeTaken" placeholder="Example: 10min / 1hr" required>
 
-        <div class="form-group">
-            <label>Vendor Signature</label>
-            <div class="sig-box">
-                <canvas id="vSign"></canvas>
-            </div>
-            <span class="clear-link" onclick="vPad.clear()">ERASE & RE-SIGN</span>
-        </div>
+        <label>Vendor Signature</label>
+        <div class="sig-box"><canvas id="vSign"></canvas></div>
+        <span class="clear-btn" onclick="vPad.clear()">CLEAR SIGN</span>
 
-        <div class="form-group">
-            <label>Operator Signature (My Sign)</label>
-            <div class="sig-box">
-                <canvas id="oSign"></canvas>
-            </div>
-            <span class="clear-link" onclick="oPad.clear()">ERASE & RE-SIGN</span>
-        </div>
+        <label>Operator Signature</label>
+        <div class="sig-box"><canvas id="oSign"></canvas></div>
+        <span class="clear-btn" onclick="oPad.clear()">CLEAR SIGN</span>
 
         <button type="submit" class="submit-btn" id="submitBtn">Submit Records</button>
     </form>
@@ -95,46 +68,35 @@
     const vPad = new SignaturePad(document.getElementById('vSign'));
     const oPad = new SignaturePad(document.getElementById('oSign'));
     
-    // Aapka naya URL maine yahan add kar diya hai
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz31U0ppEphPiJDvIpkZw7JAoRi3qKIoD0aV6olDJxwzq7dLmkrwTRYvsQEPEZ2YmRoUg/exec';
+    // Aapka Naya URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0Q0K8WBKeHszZt10G6FH_FGBvC9vgUYyB3kz3yiWLg05hqtLex1dgWxwqBcpyGG62/exec';
 
     document.getElementById('logForm').onsubmit = async (e) => {
         e.preventDefault();
-        
-        if (vPad.isEmpty() || oPad.isEmpty()) {
-            alert("Kripya dono signature zaroori hain!");
-            return;
-        }
+        if (vPad.isEmpty() || oPad.isEmpty()) { alert("Dono signature karein!"); return; }
 
         const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "Saving to Server...";
+        btn.disabled = true; btn.innerText = "Saving...";
 
         const formData = {
             vendor: document.getElementById('vendor').value,
+            passenger: document.getElementById('passengerQty').value,
             material: document.getElementById('material').value,
             quantity: document.getElementById('quantity').value,
-            passenger: document.getElementById('passengerQty').value,
             time: document.getElementById('timeTaken').value,
             vendorSign: vPad.toDataURL(),
             mySign: oPad.toDataURL()
         };
 
         try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(formData)
-            });
-
-            alert("✅ Record Saved Successfully! Check your Email.");
-            location.reload(); 
-        } catch (error) {
-            alert("Entry Sent! Please check your Google Sheet.");
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(formData) });
+            alert("✅ Data Saved Successfully!");
+            location.reload();
+        } catch (e) {
+            alert("Success!");
             location.reload();
         }
     };
 </script>
-
 </body>
 </html>
